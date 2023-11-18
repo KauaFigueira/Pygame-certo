@@ -12,30 +12,30 @@ pygame.display.set_caption('T-rex running')
 
 #pegando as imagens
 correndo = [
-    pygame.image.load(os.path.join("Pygame-certo\dinossauro", "DinoRun1.png")),
-    pygame.image.load(os.path.join("Pygame-certo\dinossauro", "DinoRun2.png"))
+    pygame.image.load(os.path.join("Pygamecerto\dinossauro", "DinoRun1.png")),
+    pygame.image.load(os.path.join("Pygamecerto\dinossauro", "DinoRun2.png"))
 ]
-pulando = pygame.image.load(os.path.join("Pygame-certo\dinossauro", "DinoJump.png"))
+pulando = pygame.image.load(os.path.join("Pygamecerto\dinossauro", "DinoJump.png"))
 mergulho = [
-    pygame.image.load(os.path.join("Pygame-certo\dinossauro", "DinoDuck1.png")),
-    pygame.image.load(os.path.join("Pygame-certo\dinossauro", "DinoDuck2.png"))
+    pygame.image.load(os.path.join("Pygamecerto\dinossauro", "DinoDuck1.png")),
+    pygame.image.load(os.path.join("Pygamecerto\dinossauro", "DinoDuck2.png"))
 ]
 cactusP = [
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "SmallCactus1.png")),
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "SmallCactus2.png")), 
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "SmallCactus3.png"))
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "SmallCactus1.png")),
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "SmallCactus2.png")), 
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "SmallCactus3.png"))
 ]
 cactusG = [
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "LargeCactus1.png")), 
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "LargeCactus2.png")), 
-    pygame.image.load(os.path.join("Pygame-certo\cactus", "LargeCactus3.png"))
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "LargeCactus1.png")), 
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "LargeCactus2.png")), 
+    pygame.image.load(os.path.join("Pygamecerto\cactus", "LargeCactus3.png"))
 ]
 passaro = [
-    pygame.image.load(os.path.join("Pygame-certo\passaro", "Bird1.png")), 
-    pygame.image.load(os.path.join("Pygame-certo\passaro", "Bird2.png"))
+    pygame.image.load(os.path.join("Pygamecerto\passaro", "Bird1.png")), 
+    pygame.image.load(os.path.join("Pygamecerto\passaro", "Bird2.png"))
 ]
-nuvens = pygame.image.load(os.path.join("Pygame-certo\ceu", "nuvem.png"))
-cenario = pygame.image.load(os.path.join("Pygame-certo\chao", "chao.png"))
+nuvens = pygame.image.load(os.path.join("Pygamecerto\ceu", "nuvem.png"))
+cenario = pygame.image.load(os.path.join("Pygamecerto\chao", "chao.png"))
 
 # Criando uma classe para o dinossauro/jogador
 class Dinossauro:
@@ -87,7 +87,10 @@ class Dinossauro:
             self.correndo = False
     #como ele mergulha(Abaixa)
     def mergulho(self):
-        self.image = self.abaixado_img[self.passos // 5]
+        if self.passos >= 8:
+            self.passos = 0
+
+        self.image = self.abaixado_img[self.passos // 4]
         self.dinossauro_rect = self.image.get_rect()
         self.dinossauro_rect.x = self.x
         self.dinossauro_rect.y = self.y_mergulho
@@ -97,7 +100,7 @@ class Dinossauro:
         if self.passos >= 8:
             self.passos = 0
 
-        self.image = self.correndo_img[self.passos // 5]
+        self.image = self.correndo_img[self.passos // 4]
         self.dinossauro_rect = self.image.get_rect()
         self.dinossauro_rect.x = self.x
         self.dinossauro_rect.y = self.y
