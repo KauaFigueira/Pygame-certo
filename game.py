@@ -40,7 +40,7 @@ cenario = pygame.image.load(os.path.join("Pygame-certo\chao", "chao.png"))
 # Criando uma classe para o dinossauro/jogador
 class Dinossauro:
     x = 35
-    y = 280
+    y = 300
     #para ele se abaixar precisa de um Y menor do que ele correndo (nesse caso maior pq plano invertido)
     y_mergulho = 340
     VEL_PULO= 8.5
@@ -108,8 +108,9 @@ class Dinossauro:
     #Como ele pula
     def pular(self):
         self.image = self.pulando_img
+        self.dinossauro_rect.y = self.y
         if self.pulando:
-            self.dinossauro_rect.y -= self.vel_pulo * 4
+            self.dinossauro_rect.y -= self.vel_pulo * 8
             self.vel_pulo -= 0.8
         if self.vel_pulo < - self.VEL_PULO:
             self.pulando = False
@@ -126,21 +127,46 @@ class nuvem:
         self.width = self.image.get_width()
 
     def update(self):
-        self.x = -jogo_velo
+        self.x = - jogo_velo
         if self.x < -self.width:
             self.x = WIDTH + random.randint(2500,3000)
             self.y = random.randint(50,100)
 
-    def draw(self, screen):
+    def desenho(self, window):
         window.blit(self.image, (self.x,self.y))
 
-def main():
-    global jogo_velo
-    game = True
-    clock = pygame.time.Clock()
-    jogador = Dinossauro()
-    nuvens = nuvem()
-    jogo_velo = 14
+global jogo_velo , x_fundo , y_fundo , pontos
+game = True
+clock = pygame.time.Clock()
+jogador = Dinossauro()
+nuvens = nuvem()
+jogo_velo = 14
+x_fundo = 0
+y_fundo = 380
+pontos = 0
+font = pygame.font.Font('freesansbold.ttf', 20)
+
+def ponto():
+    global points , jogo_velo
+    pontos += 1
+    if pontos % 100 == 0:
+        jogo_velo +=1
+
+    texto = font.render("Pontuação: " + str(pontos) , True, (0,0,0))
+    xy_texto = texto.get_rect()
+    xy_texto.center = (1000,400)
+    window.blit(texto, xy_texto)
+
+def fundo_tela():
+    global x_fundo , y_fundo
+    WIDTH_F = cenario.get_width()
+    window.blit(cenario , (x_fundo , y_fundo))
+    window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
+    if x_fundo <= -WIDTH_F:
+        window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
+        x_fundo = 0
+    x_fundo -= jogo_velo
+
 while game:
     # FPS
     clock.tick(30)
@@ -158,6 +184,10 @@ while game:
 
     nuvens.desenho(window)
     nuvens.update()
+
+    fundo_tela()
+    
+    ponto()
 
     pygame.display.update()
     
