@@ -34,7 +34,7 @@ passaro = [
     pygame.image.load(os.path.join("Pygame-certo\passaro", "Bird1.png")), 
     pygame.image.load(os.path.join("Pygame-certo\passaro", "Bird2.png"))
 ]
-nuvens = pygame.image.load(os.path.join("Pygame-certo\ceu", "nuvem.png"))
+nuvens_img = pygame.image.load(os.path.join("Pygame-certo\ceu", "nuvem.png"))
 cenario = pygame.image.load(os.path.join("Pygame-certo\chao", "chao.png"))
 
 # Criando uma classe para o dinossauro/jogador
@@ -119,18 +119,21 @@ class Dinossauro:
     def desenho(self, window):
         window.blit(self.image, (self.dinossauro_rect.x, self.dinossauro_rect.y))
 
-class nuvem:
-    def __init__(self):
-        self.x = WIDTH + random.randint(800,1000)
-        self.y = random.randint(50,100)
-        self.image = nuvens
+class Nuvem(pygame.sprite.Sprite):
+    def __init__(self,img):
+        pygame.sprite.Sprite.__init__(self)
+        self.img = img
+        self.rect = self.img.get_rect()
+        self.rect.x = WIDTH + random.randint(800,1000)
+        self.rect.y = random.randint(50,100)
+        self.image = nuvens_img
         self.width = self.image.get_width()
 
     def update(self):
-        self.x = -jogo_velo
-        if self.x < -self.width:
-            self.x = WIDTH + random.randint(2500,3000)
-            self.y = random.randint(50,100)
+        self.rect.x += -jogo_velo
+        if self.rect.x < -self.width:
+            self.rect.x = WIDTH + random.randint(2500,3000)
+            self.rect.y = random.randint(50,100)
 
     def desenho(self, window):
         window.blit(self.image, (self.x,self.y))
@@ -139,12 +142,17 @@ global jogo_velo , x_fundo , y_fundo , pontos
 game = True
 clock = pygame.time.Clock()
 jogador = Dinossauro()
-nuvens = nuvem()
 jogo_velo = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
+
+all_sprites = pygame.sprite.Group()
+for i in range(4):
+    nuvem = Nuvem(nuvens_img)
+    all_sprites.add(nuvem)
+     
 
 def ponto():
     global pontos , jogo_velo
@@ -182,8 +190,10 @@ while game:
     jogador.desenho(window)
     jogador.update(entrada)
 
-    nuvens.desenho(window)
-    nuvens.update()
+    all_sprites.update()
+    all_sprites.draw(window)
+    
+
 
     fundo_tela()
     
