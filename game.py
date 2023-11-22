@@ -43,7 +43,7 @@ class Dinossauro:
     y = 300
     #para ele se abaixar precisa de um Y menor do que ele correndo (nesse caso maior pq plano invertido)
     y_mergulho = 340
-    VEL_PULO= 8.5
+    VEL_PULO= 8
 
     def __init__(self):
         self.abaixado_img = mergulho
@@ -70,13 +70,9 @@ class Dinossauro:
         if self.pulando:
             self.pular()
 
-        #Se ele nao fizer nada, continuar correndo
-        if not entrada[pygame.K_UP] and not entrada[pygame.K_DOWN]:
-            self.abaixado = False
-            self.pulando = False
-            self.correndo = True
+        
         #Se ele estiver pulando ele nao pode mergulhar
-        elif entrada[pygame.K_DOWN] and not self.pulando:
+        if entrada[pygame.K_DOWN] and not self.pulando:
             self.abaixado = True
             self.pulando = False
             self.correndo = False
@@ -85,6 +81,20 @@ class Dinossauro:
             self.pulando = True
             self.abaixado = False
             self.correndo = False
+        #Se ele nao fizer nada, continuar correndo
+        elif not (self.pulando or entrada[pygame.K_DOWN]):
+            self.abaixado = False
+            self.pulando = False
+            self.correndo = True
+    #como ele pula
+    def pular(self):
+        self.image = self.pulando_img
+        if self.pulando:
+            self.dinossauro_rect.y -= self.vel_pulo * 4
+            self.vel_pulo -= 0.8
+        if self.vel_pulo < - self.VEL_PULO:
+            self.pulando = False
+            self.vel_pulo = self.VEL_PULO
     #como ele mergulha(Abaixa)
     def mergulho(self):
         if self.passos >= 8:
@@ -105,16 +115,6 @@ class Dinossauro:
         self.dinossauro_rect.x = self.x
         self.dinossauro_rect.y = self.y
         self.passos += 1
-    #Como ele pula
-    def pular(self):
-        self.image = self.pulando_img
-        self.dinossauro_rect.y = self.y
-        if self.pulando:
-            self.dinossauro_rect.y -= self.vel_pulo * 8
-            self.vel_pulo -= 0.8
-        if self.vel_pulo < - self.VEL_PULO:
-            self.pulando = False
-            self.vel_pulo = self.VEL_PULO
 
     def desenho(self, window):
         window.blit(self.image, (self.dinossauro_rect.x, self.dinossauro_rect.y))
@@ -127,7 +127,7 @@ class nuvem:
         self.width = self.image.get_width()
 
     def update(self):
-        self.x = - jogo_velo
+        self.x = -jogo_velo
         if self.x < -self.width:
             self.x = WIDTH + random.randint(2500,3000)
             self.y = random.randint(50,100)
@@ -147,14 +147,14 @@ pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
 
 def ponto():
-    global points , jogo_velo
+    global pontos , jogo_velo
     pontos += 1
     if pontos % 100 == 0:
         jogo_velo +=1
 
     texto = font.render("Pontuação: " + str(pontos) , True, (0,0,0))
     xy_texto = texto.get_rect()
-    xy_texto.center = (1000,400)
+    xy_texto.center = (900,50)
     window.blit(texto, xy_texto)
 
 def fundo_tela():
