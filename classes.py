@@ -137,6 +137,8 @@ class Obstaculo(pygame.sprite.Sprite):
         if -self.rect.width > self.rect.x:
             Obstaculo.pop()
 
+    def desenhar(self, window):
+         window.blit(self.image[self.type], self.rect)
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx, entrada):
