@@ -139,6 +139,12 @@ class Obstaculo(pygame.sprite.Sprite):
 
     def desenhar(self, window):
          window.blit(self.image[self.type], self.rect)
+
+class cactusPe(Obstaculo):
+    def __init__(self, img):
+        self.type = random.randint(0,2)
+        super().__init__(img,self.type)
+        self.rect.y = 300
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx, entrada):
