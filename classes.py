@@ -6,12 +6,13 @@ from config import *
 
 pygame.init()
 
-global jogo_velo , x_fundo , y_fundo , pontos
+global jogo_velo , x_fundo , y_fundo , pontos, obstaculo
 jogo_velo = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
+obstaculo = []
 
 def ponto():
     global pontos , jogo_velo
@@ -144,13 +145,26 @@ class CactusP(Obstaculo):
     def __init__(self, img):
         self.type = random.randint(0,2)
         super().__init__(img,self.type)
-        self.rect.y = 335
+        self.rect.y = 345
 
 class CactusG(Obstaculo):
     def __init__(self, img):
         self.type = random.randint(0,2)
         super().__init__(img,self.type)
         self.rect.y = 320
+
+class passaros(Obstaculo):
+    def __init__(self,img):
+        self.type = 0
+        super().__init__(img, self.type)
+        self.rect.y = 230
+        self.index = 0
+
+    def desenhar(self, window):
+        if 9 <= self.index:
+            self.index = 0
+        window.blit(self.image[self.index//5], self.rect)
+        self.index += 1
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx, entrada):

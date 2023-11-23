@@ -50,6 +50,7 @@ while game:
     window.blit(jogador.image,(35,jogador.rect.y))
 
 
+
     fundo_tela()
     
     ponto()
