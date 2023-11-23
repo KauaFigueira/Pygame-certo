@@ -121,10 +121,17 @@ class Dinossauro(pygame.sprite.Sprite):
 
     def shoot(self, entrada):
         # A nova bala vai ser criada logo acima e no centro horizontal da nave
-        print('atirou')
         new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx, entrada)
         self.all_sprites.add(new_bullet)
         self.all_bullets.add(new_bullet)
+
+class Obstaculo(pygame.sprite.Sprite):
+    def __init__(self, img, type):
+        self.image = img
+        self.type = type
+        self.rect = self.image[self.type].get_rect()
+        self.rect.x = WIDTH
+    
 
 
 class Bullet(pygame.sprite.Sprite):
