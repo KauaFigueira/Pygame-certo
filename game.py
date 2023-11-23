@@ -40,7 +40,7 @@ while game:
     window.fill((255, 255, 255))  
     entrada = pygame.key.get_pressed()
     if entrada[pygame.K_SPACE]:
-        jogador.shoot()
+        jogador.shoot(entrada)
 
 
     jogador.update(entrada)

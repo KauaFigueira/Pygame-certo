@@ -39,15 +39,15 @@ class Dinossauro(pygame.sprite.Sprite):
     y = 300
     #para ele se abaixar precisa de um Y menor do que ele correndo (nesse caso maior pq plano invertido)
     y_mergulho = 340
+    
     VEL_PULO= 8
 
     def __init__(self, imgs, all_sprites, all_bullets, bullet_img):
         pygame.sprite.Sprite.__init__(self)
-        print(imgs)
+
         self.abaixado_img = imgs[0]
         self.correndo_img = imgs[1]
         self.pulando_img = imgs[2]
-        print(self.correndo_img)
 
         #determinando estado basico do personagem
         self.abaixado = False
@@ -119,10 +119,10 @@ class Dinossauro(pygame.sprite.Sprite):
         self.rect.y = self.y
         self.passos += 1
 
-    def shoot(self):
+    def shoot(self, entrada):
         # A nova bala vai ser criada logo acima e no centro horizontal da nave
         print('atirou')
-        new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx)
+        new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx, entrada)
         self.all_sprites.add(new_bullet)
         self.all_bullets.add(new_bullet)
 
@@ -139,7 +139,7 @@ class Bullet(pygame.sprite.Sprite):
         # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
         self.rect.bottom = bottom
-        self.speedy = -10  # Velocidade fixa para cima
+        self.speedy = 10  # Velocidade fixa para cima
 
 
     def update(self):
