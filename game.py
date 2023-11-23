@@ -26,7 +26,6 @@ for i in range(4):
     all_sprites.add(nuvem)
 
 
-
 while game:
     # FPS
     clock.tick(30)
@@ -49,7 +48,17 @@ while game:
     all_sprites.draw(window)
     window.blit(jogador.image,(35,jogador.rect.y))
 
+    if len(obstaculos) == 0:
+        if random.randint(0, 2) == 0:
+            obstaculos.append(CactusP(cactusP))
+        elif random.randint(0, 2) == 1:
+            obstaculos.append(CactusG(cactusG))
+        elif random.randint(0, 2) == 2:
+            obstaculos.append(passaros(passaro))
 
+    for obstaculo in obstaculos:
+        obstaculo.desenhar(window)
+        obstaculo.update()
 
     fundo_tela()
     

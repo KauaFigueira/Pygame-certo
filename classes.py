@@ -6,13 +6,13 @@ from config import *
 
 pygame.init()
 
-global jogo_velo , x_fundo , y_fundo , pontos, obstaculo
+global jogo_velo , x_fundo , y_fundo , pontos, obstaculos
 jogo_velo = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
-obstaculo = []
+obstaculos = []
 
 def ponto():
     global pontos , jogo_velo
@@ -66,7 +66,7 @@ class Dinossauro(pygame.sprite.Sprite):
         self.all_bullets = all_bullets
         self.bullet_img = bullet_img
 
-    def atualizar(self, entrada):
+    def update(self, entrada):
         if self.correndo:
             self.correr()
         if self.abaixado:
@@ -133,10 +133,10 @@ class Obstaculo(pygame.sprite.Sprite):
         self.rect = self.image[self.type].get_rect()
         self.rect.x = WIDTH
     
-    def atualizar(self):
+    def update(self):
         self.rect.x -= jogo_velo
         if -self.rect.width > self.rect.x:
-            Obstaculo.pop()
+            obstaculos.pop()
 
     def desenhar(self, window):
          window.blit(self.image[self.type], self.rect)
@@ -145,13 +145,13 @@ class CactusP(Obstaculo):
     def __init__(self, img):
         self.type = random.randint(0,2)
         super().__init__(img,self.type)
-        self.rect.y = 345
+        self.rect.y = 320
 
 class CactusG(Obstaculo):
     def __init__(self, img):
         self.type = random.randint(0,2)
         super().__init__(img,self.type)
-        self.rect.y = 320
+        self.rect.y = 300
 
 class passaros(Obstaculo):
     def __init__(self,img):
@@ -180,7 +180,7 @@ class Bullet(pygame.sprite.Sprite):
         self.speedy = 10  # Velocidade fixa para cima
 
 
-    def atualizar(self):
+    def update(self):
         # A bala só se move no eixo y
         self.rect.x += self.speedy
 
@@ -198,7 +198,7 @@ class Nuvem(pygame.sprite.Sprite):
         self.image = nuvens_img
         self.width = self.image.get_width()
 
-    def atualizar(self):
+    def update(self):
         self.rect.x += -jogo_velo
         if self.rect.x < -self.width:
             self.rect.x = WIDTH + random.randint(0,500)
