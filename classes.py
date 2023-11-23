@@ -65,7 +65,7 @@ class Dinossauro(pygame.sprite.Sprite):
         self.all_bullets = all_bullets
         self.bullet_img = bullet_img
 
-    def update(self, entrada):
+    def atualizar(self, entrada):
         if self.correndo:
             self.correr()
         if self.abaixado:
@@ -132,7 +132,10 @@ class Obstaculo(pygame.sprite.Sprite):
         self.rect = self.image[self.type].get_rect()
         self.rect.x = WIDTH
     
-
+    def atualizar(self):
+        self.rect.x -= jogo_velo
+        if -self.rect.width > self.rect.x:
+            Obstaculo.pop()
 
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
@@ -149,7 +152,7 @@ class Bullet(pygame.sprite.Sprite):
         self.speedy = 10  # Velocidade fixa para cima
 
 
-    def update(self):
+    def atualizar(self):
         # A bala só se move no eixo y
         self.rect.x += self.speedy
 
@@ -167,7 +170,7 @@ class Nuvem(pygame.sprite.Sprite):
         self.image = nuvens_img
         self.width = self.image.get_width()
 
-    def update(self):
+    def atualizar(self):
         self.rect.x += -jogo_velo
         if self.rect.x < -self.width:
             self.rect.x = WIDTH + random.randint(0,500)
