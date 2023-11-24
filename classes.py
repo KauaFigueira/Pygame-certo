@@ -7,12 +7,14 @@ from config import *
 pygame.init()
 
 global jogo_velo , x_fundo , y_fundo , pontos, obstaculos
+game = True
 jogo_velo = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
 obstaculos = []
+mortes = 0
 
 def ponto():
     global pontos , jogo_velo
@@ -206,3 +208,37 @@ class Nuvem(pygame.sprite.Sprite):
 
     def desenho(self, window):
         window.blit(self.image, (self.x,self.y))
+
+# def game_over(mortes):
+#     global pontos
+#     game = True
+#     mortes = 0
+
+#     while game:
+#         window.fill((255, 255, 255))
+#         font = pygame.font.Font('freesansbold.ttf', 30)
+
+#         if mortes == 0:
+#             mensagem = font.render("Clique em qualquer tecla para começar", True, (0, 0, 0))
+#         elif mortes > 0:
+#             mensagem = font.render("Clique em qualquer tecla para reiniciar", True, (0, 0, 0))
+#             pontos_obtidos = font.render("Sua pontuação: " + str(pontos), True, (0, 0, 0))
+#             pontos_rect = pontos_obtidos.get_rect()
+#             pontos_rect.center = (WIDTH // 2, HEIGHT // 2 + 50)
+#             window.blit(pontos_obtidos, pontos_rect)
+#         mensagem_rect = mensagem.get_rect()
+#         mensagem_rect.center = (WIDTH // 2, HEIGHT // 2)
+#         window.blit(mensagem, mensagem_rect)
+#         window.blit(correndo[0], (WIDTH // 2 - 20, HEIGHT // 2 - 140))
+#         pygame.display.update()
+
+#         for evento in pygame.event.get():
+#             if evento.type == pygame.QUIT:
+#                 run = False
+#             if evento.type == pygame.KEYDOWN:
+#                 jogo()
+
+            
+
+                
+                    
