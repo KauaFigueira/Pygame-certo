@@ -13,32 +13,36 @@ window = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption('T-rex running')
 
 
-all_bullets = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
 
-# game = True
-# clock = pygame.time.Clock()
-# jogador = Dinossauro([mergulho, correndo, pulando], all_sprites, all_bullets, bullet_img)
-
-for i in range(4):
-    nuvem = Nuvem(nuvens_img)
-    all_sprites.add(nuvem)
-
-mortes = 0
 
 def jogo():
-    game = True
     clock = pygame.time.Clock()
+
+    all_bullets = pygame.sprite.Group()
+    all_sprites = pygame.sprite.Group()
+
+    for i in range(4):
+        nuvem = Nuvem(nuvens_img)
+        all_sprites.add(nuvem)
+
     jogador = Dinossauro([mergulho, correndo, pulando], all_sprites, all_bullets, bullet_img)
-    mortes = 0
-    while game:
+    pontos = 0
+    x_fundo = 0
+    y_fundo = 380
+
+    all_obstaculos = pygame.sprite.Group()
+
+    jogo_velo = 14
+
+    estado = 2
+    while estado == 2:
 
         # FPS
         clock.tick(30)
         # Trata eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                game = False
+                estado = -1
                 
 
         # ----- Gera saídas
@@ -47,52 +51,60 @@ def jogo():
         if entrada[pygame.K_SPACE]:
             jogador.shoot(entrada)
 
-
         jogador.update(entrada)
+
+
+        if len(all_obstaculos) == 0:
+            if random.randint(0, 2) == 0:
+                o = CactusP(cactusP)
+                all_obstaculos.add(o)
+                all_sprites.add(o)
+            elif random.randint(0, 2) == 1:
+                o = CactusG(cactusG)
+                all_obstaculos.add(o)
+                all_sprites.add(o)
+            elif random.randint(0, 2) == 2:
+                o = Passaro(passaro)
+                all_obstaculos.add(o)
+                all_sprites.add(o)
+
+        for obstaculo in all_obstaculos:
+            if jogador.rect.colliderect(obstaculo.rect):
+                pygame.time.delay(2000)
+                estado = 9
+
+        WIDTH_F = cenario.get_width()
+        window.blit(cenario , (x_fundo , y_fundo))
+        window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
+        if x_fundo <= -WIDTH_F:
+            window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
+            x_fundo = 0
+        x_fundo -= jogo_velo
+        
+        pontos += 1
+        if pontos % 100 == 0:
+            jogo_velo +=1
+
+        texto = font.render("Pontuação: " + str(pontos) , True, (0,0,0))
+        xy_texto = texto.get_rect()
+        xy_texto.center = (900,50)
+        window.blit(texto, xy_texto)
 
         all_sprites.update()
         all_sprites.draw(window)
         window.blit(jogador.image,(35,jogador.rect.y))
 
-        if len(obstaculos) == 0:
-            if random.randint(0, 2) == 0:
-                obstaculos.append(CactusP(cactusP))
-            elif random.randint(0, 2) == 1:
-                obstaculos.append(CactusG(cactusG))
-            elif random.randint(0, 2) == 2:
-                obstaculos.append(passaros(passaro))
-
-        for obstaculo in obstaculos:
-            obstaculo.desenhar(window)
-            obstaculo.update()
-            if jogador.rect.colliderect(obstaculo.rect):
-                pygame.time.delay(2000)
-                mortes += 1
-                game_over(mortes)
-
-        fundo_tela()
-        
-        ponto()
-
         pygame.display.update()
+    print('saiu jogo')
+    return estado, pontos
 
-def game_over(mortes):
-    global pontos
-    game = True
-    mortes = 0
-
-    while game:
+def inicio():
+    estado = 0
+    while estado == 0:
         window.fill((255, 255, 255))
         font = pygame.font.Font('freesansbold.ttf', 30)
 
-        if mortes == 0:
-            mensagem = font.render("Clique em qualquer tecla para começar", True, (0, 0, 0))
-        elif mortes > 0:
-            mensagem = font.render("Clique em qualquer tecla para reiniciar", True, (0, 0, 0))
-            pontos_obtidos = font.render("Sua pontuação: " + str(pontos), True, (0, 0, 0))
-            pontos_rect = pontos_obtidos.get_rect()
-            pontos_rect.center = (WIDTH // 2, HEIGHT // 2 + 50)
-            window.blit(pontos_obtidos, pontos_rect)
+        mensagem = font.render("Clique em qualquer tecla para começar", True, (0, 0, 0))
         mensagem_rect = mensagem.get_rect()
         mensagem_rect.center = (WIDTH // 2, HEIGHT // 2)
         window.blit(mensagem, mensagem_rect)
@@ -100,9 +112,48 @@ def game_over(mortes):
         pygame.display.update()
 
         for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                game = False
             if evento.type == pygame.KEYDOWN:
-                jogo()
+                estado = 2
+            if evento.type == pygame.QUIT:
+                estado = -1
+    print('saiu inicio')
+    return estado
 
-game_over(mortes=0)
+def game_over(pontos):
+
+    estado = 9
+
+    while estado == 9:
+        window.fill((255, 255, 255))
+        font = pygame.font.Font('freesansbold.ttf', 30)
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.KEYDOWN:
+                estado = 2
+            if evento.type == pygame.QUIT:
+                estado = -1
+
+        mensagem = font.render("Clique em qualquer tecla para reiniciar", True, (0, 0, 0))
+        pontos_obtidos = font.render("Sua pontuação: " + str(pontos), True, (0, 0, 0))
+        pontos_rect = pontos_obtidos.get_rect()
+        pontos_rect.center = (WIDTH // 2, HEIGHT // 2 + 50)
+        window.blit(pontos_obtidos, pontos_rect)
+        mensagem_rect = mensagem.get_rect()
+        mensagem_rect.center = (WIDTH // 2, HEIGHT // 2)
+        window.blit(mensagem, mensagem_rect)
+        window.blit(correndo[0], (WIDTH // 2 - 20, HEIGHT // 2 - 140))
+        pygame.display.update()
+
+    print('saiu game over')
+    return estado
+
+
+estado = 0
+pontos = 0
+while True:
+    print(f'estado: {estado} - pontos: {pontos}')
+    if estado == -1: break
+    elif estado == 0: estado = inicio()
+    elif estado == 2: estado, pontos = jogo()
+    elif estado == 9: estado = game_over(pontos)
+print('Volte sempre!')

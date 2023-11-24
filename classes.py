@@ -6,36 +6,13 @@ from config import *
 
 pygame.init()
 
-global jogo_velo , x_fundo , y_fundo , pontos, obstaculos
 game = True
 jogo_velo = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
 font = pygame.font.Font('freesansbold.ttf', 20)
-obstaculos = []
 mortes = 0
-
-def ponto():
-    global pontos , jogo_velo
-    pontos += 1
-    if pontos % 100 == 0:
-        jogo_velo +=1
-
-    texto = font.render("Pontuação: " + str(pontos) , True, (0,0,0))
-    xy_texto = texto.get_rect()
-    xy_texto.center = (900,50)
-    window.blit(texto, xy_texto)
-
-def fundo_tela():
-    global x_fundo , y_fundo
-    WIDTH_F = cenario.get_width()
-    window.blit(cenario , (x_fundo , y_fundo))
-    window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
-    if x_fundo <= -WIDTH_F:
-        window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
-        x_fundo = 0
-    x_fundo -= jogo_velo
 
 class Dinossauro(pygame.sprite.Sprite):
     x = 35
@@ -130,43 +107,38 @@ class Dinossauro(pygame.sprite.Sprite):
 
 class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, img, type):
-        self.image = img
+        pygame.sprite.Sprite.__init__(self)
         self.type = type
-        self.rect = self.image[self.type].get_rect()
+        self.image = img[self.type]
+        self.rect = self.image.get_rect()
         self.rect.x = WIDTH
     
     def update(self):
         self.rect.x -= jogo_velo
         if -self.rect.width > self.rect.x:
-            obstaculos.pop()
-
-    def desenhar(self, window):
-         window.blit(self.image[self.type], self.rect)
+            self.kill()
 
 class CactusP(Obstaculo):
     def __init__(self, img):
-        self.type = random.randint(0,2)
-        super().__init__(img,self.type)
+        super().__init__(img, random.randint(0,2))
         self.rect.y = 320
 
 class CactusG(Obstaculo):
     def __init__(self, img):
-        self.type = random.randint(0,2)
-        super().__init__(img,self.type)
+        super().__init__(img, random.randint(0,2))
         self.rect.y = 300
 
-class passaros(Obstaculo):
+class Passaro(Obstaculo):
     def __init__(self,img):
-        self.type = 0
-        super().__init__(img, self.type)
+        super().__init__(img, 0)
         self.rect.y = 230
         self.index = 0
 
-    def desenhar(self, window):
-        if 9 <= self.index:
-            self.index = 0
-        window.blit(self.image[self.index//5], self.rect)
-        self.index += 1
+    # def desenhar(self, window):
+    #     if 9 <= self.index:
+    #         self.index = 0
+    #     window.blit(self.image[self.index//5], self.rect)
+    #     self.index += 1
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx, entrada):
@@ -209,34 +181,7 @@ class Nuvem(pygame.sprite.Sprite):
     def desenho(self, window):
         window.blit(self.image, (self.x,self.y))
 
-# def game_over(mortes):
-#     global pontos
-#     game = True
-#     mortes = 0
-
-#     while game:
-#         window.fill((255, 255, 255))
-#         font = pygame.font.Font('freesansbold.ttf', 30)
-
-#         if mortes == 0:
-#             mensagem = font.render("Clique em qualquer tecla para começar", True, (0, 0, 0))
-#         elif mortes > 0:
-#             mensagem = font.render("Clique em qualquer tecla para reiniciar", True, (0, 0, 0))
-#             pontos_obtidos = font.render("Sua pontuação: " + str(pontos), True, (0, 0, 0))
-#             pontos_rect = pontos_obtidos.get_rect()
-#             pontos_rect.center = (WIDTH // 2, HEIGHT // 2 + 50)
-#             window.blit(pontos_obtidos, pontos_rect)
-#         mensagem_rect = mensagem.get_rect()
-#         mensagem_rect.center = (WIDTH // 2, HEIGHT // 2)
-#         window.blit(mensagem, mensagem_rect)
-#         window.blit(correndo[0], (WIDTH // 2 - 20, HEIGHT // 2 - 140))
-#         pygame.display.update()
-
-#         for evento in pygame.event.get():
-#             if evento.type == pygame.QUIT:
-#                 run = False
-#             if evento.type == pygame.KEYDOWN:
-#                 jogo()
+        
 
             
 
