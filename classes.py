@@ -7,7 +7,7 @@ from config import *
 pygame.init()
 
 game = True
-jogo_velo = 14
+velocidade = 14
 x_fundo = 0
 y_fundo = 380
 pontos = 0
@@ -124,10 +124,11 @@ class Obstaculo(pygame.sprite.Sprite):
         self.rect.x = WIDTH
         self.mask = pygame.mask.from_surface(self.image)
     
-    def update(self):
-        self.rect.x -= jogo_velo
+    def update(self, velocidade):
+        self.rect.x -= velocidade
         if -self.rect.width > self.rect.x:
             self.kill()
+        
 
 class CactusP(Obstaculo):
     def __init__(self, img):
@@ -145,8 +146,8 @@ class Passaro(Obstaculo):
         self.images = img
         self.rect.y = 270
         self.index = 0
-    def update(self):
-        self.rect.x -= jogo_velo
+    def update(self, velocidade):
+        self.rect.x -= velocidade
         if -self.rect.width > self.rect.x:
             self.kill()
         if self.index >= 8:
@@ -175,7 +176,7 @@ class Bullet(pygame.sprite.Sprite):
         self.speedy = 10  # Velocidade fixa para cima
 
 
-    def update(self):
+    def update(self, velocidade):
         # A bala só se move no eixo y
         self.rect.x += self.speedy
 
@@ -193,8 +194,8 @@ class Nuvem(pygame.sprite.Sprite):
         self.image = nuvens_img
         self.width = self.image.get_width()
 
-    def update(self):
-        self.rect.x += -jogo_velo
+    def update(self, velocidade):
+        self.rect.x += -velocidade
         if self.rect.x < -self.width:
             self.rect.x = WIDTH + random.randint(0,500)
             self.rect.y = random.randint(50,100)

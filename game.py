@@ -4,6 +4,7 @@ import random
 from imagens import *
 from classes import *
 
+
 pygame.init()
 
 # Tela
@@ -31,7 +32,7 @@ def jogo():
 
     all_obstaculos = pygame.sprite.Group()
 
-    jogo_velo = 14
+    velocidade = 14
 
     estado = 2
     while estado == 2:
@@ -79,18 +80,18 @@ def jogo():
         if x_fundo <= -WIDTH_F:
             window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
             x_fundo = 0
-        x_fundo -= jogo_velo
+        x_fundo -= velocidade
         
         jogador.pontos += 1
         if jogador.pontos % 100 == 0:
-            jogo_velo +=1
+            velocidade +=1
 
         texto = font.render("Pontuação: " + str(jogador.pontos) , True, (0,0,0))
         xy_texto = texto.get_rect()
         xy_texto.center = (900,50)
         window.blit(texto, xy_texto)
 
-        all_sprites.update()
+        all_sprites.update(velocidade)
         all_sprites.draw(window)
         window.blit(jogador.image,(35,jogador.rect.y))
 
