@@ -20,7 +20,7 @@ class Dinossauro(pygame.sprite.Sprite):
     #para ele se abaixar precisa de um Y menor do que ele correndo (nesse caso maior pq plano invertido)
     y_mergulho = 340
     
-    VEL_PULO= 8
+    VEL_PULO = 8
 
     def __init__(self, imgs, all_sprites, all_bullets, bullet_img):
         pygame.sprite.Sprite.__init__(self)
@@ -142,8 +142,23 @@ class CactusG(Obstaculo):
 class Passaro(Obstaculo):
     def __init__(self,img):
         super().__init__(img, 0)
-        self.rect.y = 230
+        self.images = img
+        self.rect.y = 270
         self.index = 0
+    def update(self):
+        self.rect.x -= jogo_velo
+        if -self.rect.width > self.rect.x:
+            self.kill()
+        if self.index >= 8:
+            self.index = 0
+
+        x = self.rect.x
+        y = self.rect.y
+        self.image = self.images[self.index // 4]
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.index += 1
 
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
@@ -156,7 +171,7 @@ class Bullet(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
-        self.rect.bottom = bottom
+        self.rect.bottom = bottom + 40
         self.speedy = 10  # Velocidade fixa para cima
 
 
