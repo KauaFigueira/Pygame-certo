@@ -26,7 +26,6 @@ def jogo():
         all_sprites.add(nuvem)
 
     jogador = Dinossauro([mergulho, correndo, pulando], all_sprites, all_bullets, bullet_img)
-    pontos = 0
     x_fundo = 0
     y_fundo = 380
 
@@ -50,7 +49,6 @@ def jogo():
         entrada = pygame.key.get_pressed()
         if entrada[pygame.K_SPACE]:
             jogador.shoot(entrada)
-
         jogador.update(entrada)
 
 
@@ -68,11 +66,13 @@ def jogo():
                 all_obstaculos.add(o)
                 all_sprites.add(o)
 
-        for obstaculo in all_obstaculos:
-            if jogador.rect.colliderect(obstaculo.rect):
-                pygame.time.delay(2000)
-                estado = 9
-
+        hits = pygame.sprite.spritecollide(jogador , all_obstaculos, False, pygame.sprite.collide_mask)
+        if hits != []:
+            pygame.time.delay(2000)
+            estado = 9
+        
+        hits = pygame.sprite.groupcollide(all_bullets , all_obstaculos, True, pygame.sprite.collide_mask)
+        
         WIDTH_F = cenario.get_width()
         window.blit(cenario , (x_fundo , y_fundo))
         window.blit(cenario , (WIDTH_F + x_fundo , y_fundo))
@@ -81,11 +81,11 @@ def jogo():
             x_fundo = 0
         x_fundo -= jogo_velo
         
-        pontos += 1
-        if pontos % 100 == 0:
+        jogador.pontos += 1
+        if jogador.pontos % 100 == 0:
             jogo_velo +=1
 
-        texto = font.render("Pontuação: " + str(pontos) , True, (0,0,0))
+        texto = font.render("Pontuação: " + str(jogador.pontos) , True, (0,0,0))
         xy_texto = texto.get_rect()
         xy_texto.center = (900,50)
         window.blit(texto, xy_texto)
@@ -96,7 +96,7 @@ def jogo():
 
         pygame.display.update()
     print('saiu jogo')
-    return estado, pontos
+    return estado, jogador.pontos
 
 def inicio():
     estado = 0

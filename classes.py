@@ -37,15 +37,23 @@ class Dinossauro(pygame.sprite.Sprite):
         self.passos = 0
         self.vel_pulo = self.VEL_PULO
         self.image = self.correndo_img[0]
-        self.rect = self.image.get_rect()
+        #self.rect = self.image.get_rect()
+        self.rect = pygame.Rect(self.x, self.y, 50, 50)
         self.y_mergulho = 340
         self.rect.x = self.x
         self.rect.y = self.y
+
+        self.mask = pygame.mask.from_surface(self.image)
         self.all_sprites = all_sprites
         self.all_bullets = all_bullets
         self.bullet_img = bullet_img
 
+        self.pontos = 0
+        self.municao = -1
+
     def update(self, entrada):
+        if self.pontos % 1000 == 0:
+            self.municao += 1
         if self.correndo:
             self.correr()
         if self.abaixado:
@@ -100,10 +108,12 @@ class Dinossauro(pygame.sprite.Sprite):
         self.passos += 1
 
     def shoot(self, entrada):
-        # A nova bala vai ser criada logo acima e no centro horizontal da nave
-        new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx, entrada)
-        self.all_sprites.add(new_bullet)
-        self.all_bullets.add(new_bullet)
+        if self.municao > 0:
+            # A nova bala vai ser criada logo acima e no centro horizontal da nave
+            new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx, entrada)
+            self.all_sprites.add(new_bullet)
+            self.all_bullets.add(new_bullet)
+            self.municao -= 1
 
 class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, img, type):
@@ -112,6 +122,7 @@ class Obstaculo(pygame.sprite.Sprite):
         self.image = img[self.type]
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
+        self.mask = pygame.mask.from_surface(self.image)
     
     def update(self):
         self.rect.x -= jogo_velo
@@ -134,11 +145,6 @@ class Passaro(Obstaculo):
         self.rect.y = 230
         self.index = 0
 
-    # def desenhar(self, window):
-    #     if 9 <= self.index:
-    #         self.index = 0
-    #     window.blit(self.image[self.index//5], self.rect)
-    #     self.index += 1
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx, entrada):
@@ -147,7 +153,7 @@ class Bullet(pygame.sprite.Sprite):
 
         self.image = img
         self.rect = self.image.get_rect()
-
+        self.mask = pygame.mask.from_surface(self.image)
         # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
         self.rect.bottom = bottom
