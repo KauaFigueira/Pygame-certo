@@ -175,7 +175,7 @@ class Bullet(pygame.sprite.Sprite):
         # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
         self.rect.bottom = bottom + 40
-        self.speedy = 10  # Velocidade fixa para cima
+        self.speedy = 25  # Velocidade fixa para cima
 
 
     def update(self, velocidade):
