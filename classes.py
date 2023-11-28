@@ -3,6 +3,7 @@ import os
 import random
 from imagens import *
 from config import *
+from musica import *
 
 pygame.init()
 
@@ -114,6 +115,7 @@ class Dinossauro(pygame.sprite.Sprite):
             self.all_sprites.add(new_bullet)
             self.all_bullets.add(new_bullet)
             self.municao -= 1
+            tiro.play()
 
 class Obstaculo(pygame.sprite.Sprite):
     def __init__(self, img, type):

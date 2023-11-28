@@ -3,6 +3,7 @@ import os
 import random
 from imagens import *
 from classes import *
+from musica import *
 
 
 pygame.init()
@@ -37,6 +38,8 @@ def jogo():
     estado = 2
     while estado == 2:
 
+        run.play()
+
         # FPS
         clock.tick(30)
         # Trata eventos
@@ -69,6 +72,8 @@ def jogo():
 
         hits = pygame.sprite.spritecollide(jogador , all_obstaculos, False, pygame.sprite.collide_mask)
         if hits != []:
+            run.stop()
+            morte.play()
             pygame.time.delay(2000)
             estado = 9
         
